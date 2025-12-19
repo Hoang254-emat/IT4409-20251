@@ -27,4 +27,4 @@ jobs:
           [cite_start]file: ./backend/Dockerfile [cite: 247]
           [cite_start]push: true [cite: 248]
           # Sửa 'lamdb' thành tên Docker Hub của bạn [cite: 242, 249]
-          tags: tên-tài-khoản-của-bạn/it4409-sample:latest
+          tags: hoang254/it4409-sample:latest
