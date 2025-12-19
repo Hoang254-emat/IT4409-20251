@@ -1,0 +1,30 @@
+[cite_start]name: CI/CD and Docker [cite: 225]
+
+on:
+  push:
+    [cite_start]branches: [ main ] # Kích hoạt khi push code lên nhánh main [cite: 226, 227, 228, 229]
+
+jobs:
+  build-and-push:
+    [cite_start]runs-on: ubuntu-latest [cite: 232]
+    steps:
+      - [cite_start]name: Checkout source code [cite: 234]
+        uses: actions/checkout@v4
+
+      - [cite_start]name: Set up Docker Buildx [cite: 235]
+        uses: docker/setup-buildx-action@v3
+
+      - [cite_start]name: Login to Docker Hub [cite: 237]
+        uses: docker/login-action@v3
+        with:
+          [cite_start]username: ${{ secrets.DOCKERHUB_USERNAME }} [cite: 240]
+          [cite_start]password: ${{ secrets.DOCKERHUB_TOKEN }} [cite: 240]
+
+      - [cite_start]name: Build and push Docker image [cite: 243]
+        uses: docker/build-push-action@v5
+        with:
+          [cite_start]context: ./backend # Trỏ vào thư mục backend của bạn [cite: 246]
+          [cite_start]file: ./backend/Dockerfile [cite: 247]
+          [cite_start]push: true [cite: 248]
+          # Sửa 'lamdb' thành tên Docker Hub của bạn [cite: 242, 249]
+          tags: tên-tài-khoản-của-bạn/it4409-sample:latest
