@@ -1,21 +1,22 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const e = require("express");
+// Cài đặt thư viện dotenv: npm install dotenv [cite: 114]
+require("dotenv").config(); // Đọc thông tin từ file .env [cite: 115]
+const express = require("express"); // [cite: 116]
+const mongoose = require("mongoose"); // [cite: 117]
+const cors = require("cors"); // [cite: 118]
 
-const app = express();
+const app = express(); // [cite: 119, 120]
 
 // Middleware
-app.use(cors());
-app.use(express.json()); 
+app.use(cors()); // Cho phép truy cập từ các domain khác (Frontend) [cite: 121]
+app.use(express.json()); // Hỗ trợ đọc dữ liệu định dạng JSON từ request [cite: 122]
 
-// Kết nối MongoDB 
+// Kết nối MongoDB sử dụng biến môi trường MONGO_URI [cite: 123, 124]
 mongoose
-  .connect("mongodb+srv://20225190:20225190@cluster0.bu0uywg.mongodb.net/?appName=Cluster0")
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("MongoDB Error:", err));
+  .connect(process.env.MONGO_URI) 
+  .then(() => console.log("Connected to MongoDB")) // [cite: 125]
+  .catch((err) => console.error("MongoDB Error:", err)); // [cite: 126]
 
-// Định nghĩa schema và model người dùng
+// Định nghĩa Schema và Model người dùng
 const UserSchema = new mongoose.Schema({
   name: { type: String, required: true, minlength: 2, trim: true },
   age: { type: Number, required: true, min: 0 },
@@ -24,7 +25,9 @@ const UserSchema = new mongoose.Schema({
 });
 const User = mongoose.model("User", UserSchema);
 
-// API get
+// --- CÁC API CRUD ---
+
+// 1. API Lấy danh sách người dùng (Phân trang + Tìm kiếm)
 app.get("/api/users", async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -56,7 +59,7 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
-// API post
+// 2. API Thêm người dùng mới
 app.post("/api/users", async (req, res) => {
   try {
     const { name, age, email, address } = req.body;
@@ -71,7 +74,7 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
-// API put
+// 3. API Cập nhật người dùng
 app.put("/api/users/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -96,7 +99,7 @@ app.put("/api/users/:id", async (req, res) => {
   }
 });
 
-// API delete
+// 4. API Xóa người dùng
 app.delete("/api/users/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -113,6 +116,7 @@ app.delete("/api/users/:id", async (req, res) => {
   }
 });
 
-app.listen(3001, () => {
-  console.log("Server is running on http://localhost:3001");
+const PORT = process.env.PORT || 3001; 
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
